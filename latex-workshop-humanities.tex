@@ -1,0 +1,1066 @@
+\documentclass{article}
+
+\usepackage[british]{babel}     % Turns on British English language / hyphenation rules.
+\usepackage{csquotes}           % Context-sensitive quotation facilities, recommended by Babel
+\usepackage[                    % Allows creation of bibliography (with APA selected).
+    style=apa,
+    backend=biber
+]{biblatex}
+\DeclareLanguageMapping{british}{british-apa}   % British English for APA style.
+\addbibresource{bib.bib}        % Points to a bibliography file within the same folder.
+\usepackage{fontspec}           % Allows switching of fonts.
+\usepackage{fontawesome}        % Provides a set of icons also used by Overleaf.
+\usepackage{lipsum}             % Produces parts of the Lorem Ipsum.
+\usepackage{multirow}           % Allows table cells to span multiple rows.
+\usepackage{booktabs}           % For more beautiful tables.
+\usepackage{ltablex}            % For long tables with variable column widths.
+\usepackage{threeparttable}     % For tables with footnotes.
+\usepackage{graphicx}           % Enables insertion of images.
+\usepackage{tikz}               % Allows you to draw figures, graphs
+\usepackage{menukeys}           % Allows you to typeset keyboard shortcuts.
+\usepackage{hologo}             % Adds a few logos for XeLaTeX and friends.
+\usepackage{tcolorbox}          % Allows you to create coloured boxes.
+\usepackage{cprotect}           % Allows you to use verbatim text in a macro.
+\usepackage{carolmin}           % Enables \cminfamily for carolingian minuscule.
+\usepackage{hyperref}           % Allows clickable hyperlinks in the text.
+\hypersetup{colorlinks = true, urlcolor = blue}
+
+% New font families for Charis SIL and Noto Sans JP.
+% This will not work unless you have a directory 'fonts' 
+% in the same folder as this file, containing the fonts.
+\newfontfamily{\charissil}[
+    Path            =   ./fonts/charis-sil/,
+    BoldFont        =   CharisSIL-B.ttf,
+    ItalicFont      =   CharisSIL-I.ttf,
+    BoldItalicFont  =   CharisSIL-BI.ttf
+]{CharisSIL.ttf}
+\newfontfamily{\notosansjp}[
+    Path            =   ./fonts/noto-sans-jp/,
+    BoldFont        =   NotoSansJP-Bold.ttf
+]{NotoSansJP-Regular.ttf}
+
+
+% Turn the newly created switches into parametrized commands.
+\newcommand{\ipa}[1]{{\charissil #1}}
+\newcommand{\japanese}[1]{{\notosansjp #1}}
+
+% Custom commands to make citing LaTeX commands easier.
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\definition}[1]{\textbf{#1}}
+\newcommand{\filename}[1]{\texttt{#1}}
+\newcommand{\switch}[1]{\texttt{\textbackslash#1}}
+\newcommand{\command}[2]{\texttt{\textbackslash#1\{#2\}}}
+\newcommand{\optcommand}[2]{\texttt{\textbackslash#1[#2]}}
+\newcommand{\commandopt}[3]{\texttt{\textbackslash#1[#3]\{#2\}}}
+\newcommand{\latexenv}[1]{\texttt{\textbackslash{}begin\{#1\}}\ldots\texttt{\textbackslash{}end\{#1\}}}
+
+% Shortcut for the BibLaTeX logo (not present in the hologo package)
+\newcommand{\biblatex}{\textsc{Bib}\LaTeX{}}
+
+\usepackage{fancyvrb}       % Fancy verbatim environments.
+    \newenvironment{CVerbatim} % Verbatim environment with centered text.
+    {\VerbatimEnvironment
+    \begin{center}
+    \begin{BVerbatim}}
+    {\end{BVerbatim}
+    \end{center}}
+
+% Create a new counter for our exercises and set it to 1.
+\newcounter{exercisecounter}
+\setcounter{exercisecounter}{1}
+
+% Create a nice box for exercises.
+\newcommand{\exercise}[1]{
+    \begin{tcolorbox}[colback=blue!5!white,colframe=blue!75!black,title=Exercise \theexercisecounter]
+        #1
+    \end{tcolorbox}
+    \stepcounter{exercisecounter}
+}
+
+\urlstyle{same}
+
+\title{\LaTeX{} for the Humanities}
+\author{Dr.\ Xander Vertegaal\\\texttt{a.j.j.vertegaal@uu.nl}}
+\date{28th February 2024}
+
+\begin{document}
+
+\maketitle
+
+Welcome to this introduction to \LaTeX! After working your way through this tutorial, you will be able to write and typeset your own documents in \LaTeX. For this tutorial, I will assume that you are using \href{www.overleaf.com}{Overleaf}, but local installations (\href{https://miktex.org/}{\hologo{MiKTeX}} for Windows, \href{http://www.tug.org/mactex/}{Mac\TeX{}} for Apple) in combination with a code editor (e.g.\ \href{https://www.xm1math.net/texmaker/}{Texmaker} or \href{https://www.texstudio.org/}{Texstudio}) work perfectly well too.
+
+\section{Introduction - what is \LaTeX{} exactly?}\label{secintro}
+
+\LaTeX{} (\ipa{/ˈlɑːtɛx/ or /ˈleɪtɛx/}) is based on \TeX, a \definition{digital typesetting system} developed in 1978 by prof.~dr.~Donald Knuth (Stanford University). Knuth was unhappy with the quality of books that were typeset using the then current practice of phototypesetting and based his new digital typesetting program on the quality of old hot metal typesetting (monotype and linotype).
+
+\TeX\ allows the user to create high-quality books, articles, theses and even PowerPoint-like presentations or exams, taking care of many tedious formatting tasks behind the scenes, while still allowing the authors full control of their documents' look and feel. In \TeX\textbackslash\LaTeX{} you use special \definition{programming commands} to indicate how you want your document to be typeset. Your text and the commands are then sent to a so-called \definition{compiler}, a programme that reads your text and the added commands and turns them into a PDF file. One particularly nice feature of \LaTeX{} is that it is \definition{platform-independent}: the same \LaTeX{} code will yield the same PDF on any operating system, regardless of whether you are using Windows, Mac OS or Linux.\footnote{The original \TeX\ and \LaTeX{} would first compile a so-called DVI (DeVice Independent) file that contains all the lay-out information of your document in a way that yields the exact same result regardless of operating system. This DVI file can then be converted into a PDF. Overleaf's \hologo{pdfLaTeX} skips the intermediary DVI step and compiles a PDF right away (which is what most people want anyway).}
+
+Initially, \TeX\ was quite difficult to use: simple tasks like creating a section header required a large set of commands to sculpt the text into the desired shape. This is why people started to develop \definition{macro packages} that would make life easier for the average user. These are basically sugar-coated, abbreviated combinations of \TeX\ commands with a lot of carefully selected default settings. The most popular of these macro packages is \LaTeX, which was developed in 1984 by Leslie Lamport. Nowadays, the raw \TeX\ commands are hardly ever used directly, but they still form the backbone of almost all \LaTeX{} functionality. Several more customisations and extensions of Knuth's original \TeX\ have been developed (\hologo{XeLaTeX}, \hologo{LuaTeX}, \hologo{pdfTeX}), but \LaTeX{} is the one most commonly used.
+
+\section{Using Overleaf and creating a new document}
+
+In your Overleaf ``Projects'' view, click \menu{{New Project}>{Blank Project}} to start a new project and give it a nice project name. For now, a ``Blank Project'' will do---in a later stadium you can also use a project template, upload a project from your computer or import a project from GitHub (for those who are familiar with it).
+
+\exercise{Create a new project and call it \emph{LaTeX workshop}.}
+
+Once you've created a project, you will end up in the editor. The editor consists of three parts.
+
+\begin{description}
+    \item[Left] is the \definition{project overview}: here we see all files in your project. As noted above you can have modular projects, where you import files into other files. For now, we have only one file: \filename{main.tex}. Below that, the File Outline presents a list of clickable links to various sections of our document.
+    \item[In the middle] we have the text editor, where we write our text and \LaTeX{} commands. This will be fed to the compiler.
+    \item[Right] is the \definition{PDF preview} of your current project, so that you can check if everything is going according to plan. You can click \menu{Recompile} to tell Overleaf to update to PDF to its latest version (or press \keys{\ctrl/\cmd + Enter} or \keys{\ctrl/\cmd + S}).
+\end{description}
+
+Now lets add some text to the middle of the screen and tell \LaTeX{} to recompile.
+
+\exercise{Add `Hello World!'\ somewhere in between \command{begin}{document} and \command{end}{document} and recompile your document.}
+
+Lo and behold! You have just created your first \LaTeX{} document! You can download it as a PDF by clicking the \faDownload\ button, or by clicking \menu{Menu>PDF}. The source code can be downloaded by clicking \menu{Menu>Source}.\footnote{There is a also a button labeled \faFileTextO\ that allows you to view the `raw' compiler logs. We will return to this later in the tutorial, cf.\ Section \ref{ssecerror}.}
+
+
+\subsection{\LaTeX{} commands}\label{sseccommands}
+
+Right now, our \filename{main.tex} looks like this. We can see that Overleaf has already added several things for us.
+
+\begin{CVerbatim}
+    \documentclass{article}
+    \usepackage{graphicx} % Required for inserting images
+
+    \title{test}
+    \author{Xander Vertegaal}
+    \date{December 2023}
+
+    \begin{document}
+
+    \maketitle
+
+    \section{Introduction}
+
+    \end{document}
+\end{CVerbatim}
+
+Of special note here are the \definition{commands}. You can recognize them by the \code{\textbackslash} that precedes them. Simple commands have the following structure.
+
+\begin{center}
+    \verb|\commandname[optional-argument]{mandatory-argument}|
+\end{center}
+
+Some commands, like \switch{maketitle} or \switch{LaTeX} (which prints the \LaTeX{} logo) do not need any arguments and can be run as is. Sometimes, a command changes the formatting of the rest of the document (such as \switch{centering}, which will center all text after it), in which case they are called \definition{switches}.\cprotect\footnote{When you use these commands in running text, \LaTeX{} will swallow a single space after them. To prevent this, write \switch{maketitle\{\}}, as if calling it with an empty mandatory argument.}
+
+Other commands, like \switch{documentclass} and \switch{section}, require additional information to function. These so-called \definition{mandatory arguments} are added in between curly brackets, e.g.\ \code{Introduction} in \command{section}{Introduction}. Commands can also take \definition{optional arguments}. These are provided using square brackets and normally come in between the function name and the mandatory argument(s). In the case of \command{documentclass}{article}, for instance, we can specify that we are in \emph{draft mode}, which speeds up compilation on large documents, by writing \commandopt{documentclass}{article}{draft}.\footnote{For multiple mandatory arguments, we add multiple sets of curly brackets. Multiple optional arguments can all be put in one set of square brackets, separated by \code{,}.}
+
+Lastly, there are also \definition{environments}, starting with \command{begin}{\ldots} and ending with \command{end}{\ldots}. These used to envelop a block of text and apply a certain formatting style to it. For instance, the \latexenv{center} environment is used to center whatever text it surrounds. We will see more of these later on.
+
+\subsection{Document class and document structure}\label{ssecdocstruct}
+
+Every \LaTeX{} document must contain at least the following two elements. If either of these is missing, \LaTeX{} will throw an error and refuse to compile your document. (Try it out!)
+
+\begin{enumerate}
+    \item \command{documentclass}{...} defines the type of document we are creating. This must be the first line of your document. By default, this is \code{article}, but we can also indicate that we are making a book (\code{book}), a letter (\code{letter}) or even a PowerPoint-like presentation (\code{beamer}). This has some influence on the layout of the document.\footnote{Journals and conferences often distribute a style file for you to use when writing your paper---strictly speaking they define their own document class in which they define a whole bunch of stuff, such as page layout and bibliography style.}
+    \item \latexenv{document} encloses the so-called \definition{document body} (which must not be empty). This environment encloses what will eventually be rendered to the PDF.
+\end{enumerate}
+
+Everything before the document body is called the \definition{preamble} (or document head); This is where we define the metadata of our document, such as the title, author and date, and adjust global settings that apply to the entire document.
+
+The preamble is also where \definition{packages} are imported. Packages are extensions to \LaTeX{} that add extra functionality. For instance, the package \code{graphicx} allows us to import images into our document. You can simply import new packages using the \command{usepackage}{nameofpackage}. \LaTeX{} will automatically retrieve them from \href{https://ctan.org}{the Comprehensive \TeX{} Archive Network (CTAN)}.
+
+\exercise{Import the package \code{fontspec} in your preamble. We will need it later on.}
+
+\section{Basic text editing}\label{secbte}
+
+You see that \LaTeX{} has already taken a lot of decisions for us: it has picked a default font and font size, centered the title and made a nice bold, numbered Section title. We did not have to worry about any of that! Naturally, the standard layout will often not do, which is why we need to be able to modify it ourselves.
+
+\subsection{Type style}\label{ssectypestyle}
+
+Type style is specified by three categories: \definition{shape}, \definition{series} and \definition{family}, cf.\ Table~\ref{tbltypestyle}. For articles, the default is \emph{upright medium Roman}. If your font supports it, you can combine these categories, e.g.\ \texttt{\textbf{bold typewriter}}, \textit{\textsf{italic sans serif}}. However, it is not possible to use two from the same category at the same time (e.g.\ upright and italic).
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{r>{\ttfamily}l>{\ttfamily}l}
+        \toprule
+        {\rmfamily\bfseries Effect} & {\rmfamily\bfseries Command} & {\rmfamily\bfseries Switch} \\
+        \midrule
+        \textup{Upright shape}      & \command{textup}{...}        & \switch{upshape}            \\
+        \textit{Italic shape}       & \command{textit}{...}        & \switch{itshape}            \\
+        \textsl{Slanted shape}      & \command{textsl}{...}        & \switch{slshape}            \\
+        \textsc{Small caps shape}   & \command{textsc}{...}        & \switch{scshape}            \\
+                                    &                              &                             \\
+        \textmd{Medium series}      & \command{textmd}{...}        & \switch{mdseries}           \\
+        \textbf{Bold series}        & \command{textbf}{...}        & \switch{bfseries}           \\
+                                    &                              &                             \\
+        \textrm{Roman family}       & \command{textrm}{...}        & \switch{rmfamily}           \\
+        \texttt{Typewriter family}  & \command{texttt}{...}        & \switch{ttfamily}           \\
+        \textsf{Sans serif family}  & \command{textsf}{...}        & \switch{sffamily}           \\
+        \bottomrule
+    \end{tabular}
+    \caption{Type styles with a sample text.}\label{tbltypestyle}
+\end{table}
+
+The commands in the \code{Command} column are normally used for individual words up to a few sentences (although there is nothing preventing you from wrapping an entire text in a block). For longer texts, however, the switch commands in the third column are easier to read. Note, however, that switch commands change the formatting until it is changed back or until their \definition{scope} ends. A command's scope runs from the part of the text when it is called until the first closing curly brace (\}) or until the end of the environment it is in. 
+
+The switch commands in the third column can also be used as environments, to enclose larger pieces of text, so \latexenv{upshape} does the same as \command{textup}{\ldots}.
+
+In summary, the text
+
+\begin{center}
+    This is upright. \textit{This is Italic.} This is upright again.
+\end{center}
+
+can be gotten by any of the four following lines:
+
+\begin{CVerbatim}
+    % With a regular command
+    This is upright. \textit{This is Italic.}
+    This is upright again.
+
+    % With switches
+    This is upright. \itshape This is Italic.
+    \upshape This is upright again.
+
+    % With a 'scoped' switch in between {...}
+    This is upright {\itshape This is Italic.}
+    This is upright again.
+
+    % With an environment
+    This is upright.
+    \begin{itshape}
+        This is Italic.
+    \end{itshape}
+    This is upright again.
+\end{CVerbatim}
+
+Overleaf provides handy shortcuts for some of these, so as not to upset Windows/Mac users: \keys{\ctrl/\cmd + b} for \switch{bfseries}, \keys{\ctrl/\cmd + i} for \switch{itshape}.\footnote{Note that \keys{\ctrl/\cmd + u}, surprisingly, capitalises the selected word.}
+
+A very useful command is \command{emph}{\ldots}, which makes your text stand out from its surroundings. It does this by making the text italic if the surrounding text is upright and vice versa.
+
+\exercise{Recreate the following styles, both with switches and commands with arguments: \textbf{bold}, \textsc{small caps}, \textit{\texttt{italic typewriter}}, \textbf{\textsf{bold sans serif}}.}
+
+\subsection{Font size}\label{ssecfontsize}
+
+Font size is also controlled with switch commands, cf.\ Table \ref{tblfontsize}. They are used in the same way as the switches mentioned in the previous section. Notice that \LaTeX{} uses relative font sizes by default. This ensures that the ratio between larger and smaller text remains the same if you change the overall fontsize of your document. You can change the overall fontsize by adding \code{10pt}, \code{12pt} etc.\ as an optional argument to \texttt{\textbackslash documentclass}. \LaTeX{} will then also adjust the page margins to match the font size.
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{>{\ttfamily}r|l}
+        \toprule
+        \textrm{\textbf{Command}} & \textrm{\textbf{Output}}    \\
+        \midrule
+        \switch{tiny}             & {\tiny sample text}         \\
+        \switch{scriptsize}       & {\scriptsize sample text}   \\
+        \switch{footnotesize}     & {\footnotesize sample text} \\
+        \switch{small}            & {\small sample text}        \\
+        \switch{normalsize}       & {\normalsize sample text}   \\
+        \switch{large}            & {\large sample text}        \\
+        \switch{Large}            & {\Large sample text}        \\
+        \switch{LARGE}            & {\LARGE sample text}        \\
+        \switch{huge}             & {\huge sample text}         \\
+        \switch{Huge}             & {\Huge sample text}         \\
+        \bottomrule
+    \end{tabular}
+    \caption{Font sizes with a sample text.}\label{tblfontsize}
+\end{table}
+
+As with type styles, these switches can also be used as environments, e.g.\ \latexenv{huge} will produce the same result as the switch \switch{huge}.
+
+\subsection{Quotation marks}\label{ssecquotes}
+
+A quick note about quotation marks. While MS Word automatically changes quotation marks to their right form (i.e.\ facing left or facing right), \LaTeX{} does not. In \LaTeX{}, a single opening quotation mark is created using \code{`} (backtick or accent grave), a single closing quotation mark with \code{'} (apostrophe or accent aigu). Double quotation marks are printed by simply doubling quotation marks, e.g.:
+
+\begin{CVerbatim}
+    ``John'' or ''John''
+\end{CVerbatim}
+
+This yields ``John'' or ''John''. (In most cases, you will want the first one.)
+
+\exercise{Recreate the following text: ``\textit{Hello} \textbf{world!}" {\large This is large.} {\tiny \textsf{This is tiny and sans serif.}}}
+
+
+\subsection{Text alignment and positioning}
+
+By default, text in \LaTeX{} is fully justified, yielding nicely rectangular blocks of text. To switch to different alignments, use the commands below, cf.\ Table \ref{tblalign}.
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{l>{\ttfamily}l>{\ttfamily}l}
+
+        \toprule
+        \textbf{Alignment} & \textrm{\textbf{Environment}} & \textrm{\textbf{Switch}} \\
+        \midrule
+        Left               & \latexenv{flushleft}          & \switch{raggedright}     \\
+        Right              & \latexenv{flushright}         & \switch{raggedleft}      \\
+        Center             & \latexenv{center}             & \switch{centering}       \\
+        \bottomrule
+    \end{tabular}
+    \caption{Alignment commands}\label{tblalign}
+\end{table}
+
+A word of warning: after using a switch like \switch{centering} and \switch{raggedright} in your main text, standard \LaTeX{} has no option of reverting back to fully justified alignment. For this, you will need the package \code{ragged2e}, which allows you to use the environment \latexenv{justify} and the switch command \switch{justify}.
+
+
+\exercise{
+    Try to reproduce the following text:
+    \begin{center}
+        \textbf{This text is centered and bold.}
+    \end{center}
+
+    \begin{flushright}
+        \textit{\Large This text is right-aligned, italicised and `Large'!}
+    \end{flushright}
+}
+
+
+\subsection{Whitespaces and indentation}\label{ssecwhitespace}
+
+While doing the previous exercise, you may have noticed that \LaTeX{} does not interpret a newline as a new line. This means that if I type
+
+\begin{CVerbatim}
+    John has a cat.
+    The cat is also called John.
+\end{CVerbatim}
+
+\LaTeX{} will print these two sentences on the same line. This is convenient for keeping your \LaTeX{} code nice and clean, but not for people who want to start a new paragraph. In order to force a newline, type \switch{newline}. This will start a new line, but not a new paragraph.
+
+\begin{CVerbatim}
+    John has a cat.\newline
+    The cat is also called John.
+\end{CVerbatim}
+
+You can start a new paragraph by simply leaving a empty line between two bits of text.
+
+\begin{CVerbatim}
+    John has a cat.
+
+    The cat is also called John.
+\end{CVerbatim}
+
+\LaTeX{} automatically adds indentation to every new paragraph. Try it out to see the difference.
+
+\medskip
+
+To create \emph{vertical whitespace} between two lines, just like the one above this paragraph, there are a few commands at your disposal.
+
+\begin{itemize}
+    \item \switch{baselineskip} inserts the space of one text line between two paragraphs.
+    \item \switch{smallskip} inserts a tiny space between two paragraphs.
+    \item \switch{medskip} inserts a medium space between two paragraphs.
+    \item \switch{bigskip} inserts a large space between two paragraphs.
+    \item \command{vspace}{\ldots} inserts a fixed amount of space between two paragraphs in centimeters, millimeters, inches etc., such as \command{vspace}{2cm}. You can also enter negative length here to (e.g.\ \command{vspace}{-2cm}) to bring two pieces of text closer together.
+    \item \switch{vfill} puts the following paragraph at the bottom of the page and inserts as much whitespace as needed between that paragraph and the preceding one.
+\end{itemize}
+
+The precise height of these skips varies depending on the font (size) and the content of the page. \LaTeX{} can stretch or shrink these skips a bit if it encounters problems while filling the page. This is why the first four \definition{rubber lengths} are generally more appropriate than \command{vspace}{\ldots}.
+
+\medskip
+
+For \emph{horizontal spaces}, the following commands are used.
+
+\begin{itemize}
+    \item \verb*|\ | (i.e.\ a slash and a space): adds a single word space.
+    \item \switch{quad}: adds a space equal to the point size (font height), approximately the width of an uppercase `M'.
+    \item \switch{qquad}: adds the width of two \switch{quad}s.
+    \item \switch{enspace}: adds half a quad, approximately the width of a lowercase `n'.
+    \item \switch{hspace}{\ldots} adds a space of a user-defined length, in centimeters, millimeters, inches etc., such as \command{hspace}{3in}. Again, negative lengths can also be used.
+    \item \command{hphantom}{\ldots}: provides horizontal whitespace as wide as the text in between brackets. For example: \command{hphantom}{text} gives the width of the word `text' (without printing the word itself).
+    \item \switch{hfill}: puts the next word at the end of the line and inserts as much whitespace as needed between that word and the preceding one.
+\end{itemize}
+
+Again, the space produced by the first four spacing commands is relative to your actual font size, so the effect should stay the same, even if you decide to change the font size of your document. For this reason, they are generally preferred over the absolute command \switch{hspace}.
+
+\LaTeX{} will play around with the space between characters, words and sentences to allow for an optimal filling of the line. It will especially put a bit more space to occur after a full stop \code{.}\ for aesthetic reasons. This may have unwanted effects, especially when you are using abbreviations such as e.g. or dr. in the middle of a sentence, as \LaTeX{} will treat it as the end of a sentence. To avoid this, force \LaTeX{} to put a normal space between words there by writing a slash followed by a space, for instance: \verb*|dr.\ Shackleton|.
+
+\subsection{Diacritics and special characters}\label{ssecspecchars}
+
+Diacritics and special characters in \LaTeX{} can be entered with (you guessed it) commands, cf.\ Table \ref{tbldiacr}.
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{lll}
+        \toprule
+        \textbf{Description}  & \textbf{\LaTeX{} command}     & \textbf{Output} \\
+        \midrule
+        Grave accent          & \command{`}{o}                & ò               \\
+        Acute accent          & \command{'}{o}                & ó               \\
+        Circumflex            & \command{\textasciicircum}{o} & \^{o}           \\
+        Umlaut/trema/dieresis & \command{"}{o}                & \"{o}           \\
+        Double acute          & \command{H}{o}                & \H{o}           \\
+        Tilde                 & \command{~}{o}                & \~{o}           \\
+        Cedilla               & \command{c}{s}                & \c{s}           \\
+        Ogonek                & \command{k}{o}                & \k{o}           \\
+        Barred L              & \switch{l}                    & \l{}            \\
+        Macron                & \command{=}{o}                & \={o}           \\
+        Bar under the letter  & \command{b}{o}                & \b{o}           \\
+        Dot over the letter   & \command{.}{o}                & \.{o}           \\
+        Dot under the letter  & \command{d}{o}                & \d{o}           \\
+        Ring over letter      & \command{r}{a}                & \r{a}           \\
+        Breve                 & \command{u}{o}                & \u{o}           \\
+        Caron/há\v{c}ek       & \command{v}{o}                & \v{o}           \\
+        Tie over two letters  & \command{t}{oo}               & \t{oo}          \\
+        Slashed o             & \switch{o}                    & \o              \\
+        Dotless i or j        & \switch{i} or \switch{j}      & \i{} or \j{}    \\
+        \bottomrule
+    \end{tabular}
+    \caption{Diacritics in \LaTeX{}}\label{tbldiacr}
+\end{table}
+
+Putting diacritics on capital letters works in the same way, and you can even combine multiple diacritics if your font allows it: \={\d{n}} (\verb|\={\d{n}}|).\footnote{The standard font provided by \LaTeX{} is not well-suited for this. As detailed here \url{https://tex.stackexchange.com/questions/159291/multiple-diacritics-on-one-character}, freely downloadable fonts such as \definition{Brill} or \definition{Charis SIL} have better support for this.}
+
+\medskip
+
+You may already have hotkeys or keyboard layouts set up to directly enter these characters and other modified characters in the text editor. At this point, \LaTeX's age shines through. It was developed in the 1980s, when the internet was still in its infancy and the world was a much less globalised place. As such, it was not designed to handle non-Latin scripts. If you try to copy and paste the character \emph{ą} or a non-western character such as \japanese{猫} in your text editor, it will fail, even if your font supports it. If this happens to you, it may be a good idea to switch to a more modern compiler. \hologo{XeLaTeX} is able to interpret a wider range of characters than the traditional \LaTeX{} or \hologo{pdfLaTeX} compilers. To switch to \hologo{XeLaTeX}, select \menu{XeLaTeX} at \menu{Menu>Compiler} in Overleaf.
+
+\exercise{Try to reproduce the following (non-sensical) combinations: \H{p}, \={g}, \d{i}, \d{*}.}
+
+\subsection{Changing fonts}\label{ssecfonts}
+
+You may have noticed that some characters do not display very well in \LaTeX{}, especially signs involving multiple diacritics, or words spelled with non-Latin scripts. This is because the font that \LaTeX{} uses by default (\textit{Computer Modern}) is excellent for mathematical formulae, but cannot display all combinations of diacritics, let alone text written in non-roman writing systems, such as Greek, Arabic, Amharic or Chinese. To be able to print these characters, we need to change to a different font, and in order to change to a modern font (OpenType or TrueType), we need the package \code{fontspec}, which in turn requires the \hologo{XeLaTeX} compiler (see Section \ref{ssecspecchars} above).\footnote{You are highly recommended to use the \hologo{XeLaTeX} compiler for all your documents, as it is more modern and has better support for non-Latin scripts.}
+
+In Section \ref{ssectypestyle} we saw the three fonts (also known as \emph{font families}) that standard \LaTeX{} provides, and we learned that we can use \command{textrm}{\ldots}, \command{texttt}{\ldots} and \command{textsf}{\ldots} to switch to them. To override the fonts behind these commands, use the following.
+
+\begin{enumerate}
+    \item \command{setmainfont}{<font name>} to set the main or `roman' font.
+    \item \command{setsansfont}{<font name>} to set the `sans serif' font.
+    \item \command{setmonofont}{<font name>} to set the `monospace' or `typewriter' font.
+\end{enumerate}
+
+For instance, to change \emph{the roman font} to the font \textit{Charis SIL}, we can use \command{setmainfont}{Charis SIL}. The \command{textrm}{\ldots} command will now print in \textit{Charis SIL}.
+
+\medskip
+
+Often, however, you will want to use more than one roman or sans-serif font family. In that case, you can define your own font family using:
+
+\begin{center}
+    \switch{newfontfamily}\texttt{\{<command>\}\{<font name>\}}
+\end{center}
+
+This creates a new switch command. For instance, if we want to create a command \switch{charis} that lets us switch to \textit{Charis SIL} whenever we need, we could write the following in our preamble.\footnote{
+    For a one-off switch, not recommended for common use, you can use \command{fontspec}{<font name>}. This will switch all following characters to the specified font, until you switch back to the main font using \switch{normalfont}. Note, however, that \switch{fontspec} forces \LaTeX{} to load the font into its memory \emph{ad hoc} each time it is called, leading to longer compilation times. It is therefore almost always preferrable to use \code{newfontfamily}, which only needs to load a font once.
+}
+
+\begin{center}
+    \switch{newfontfamily}\texttt{\{\switch{charis}\}\{Charis SIL\}}.
+\end{center}
+
+\medskip
+
+\LaTeX{} can be made aware of \definition{font names} in various ways.
+
+\begin{itemize}
+    \item Overleaf has a wide range of fonts already loaded in. You can view the full list (with examples) in \href{https://www.overleaf.com/latex/examples/fontspec-all-the-fonts/hjrpnxhrrtxc}{this document (Overleaf.com)}. If you are running a downloaded version of \LaTeX{} on your own system, these will likely not work.
+
+    \item If you are running \LaTeX{} on your own device, you can use fonts that are already installed on your computer. For Windows, these are found in \texttt{C:/Windows/Fonts}. You can use these fonts by specifying the font name as it appears in your font manager, e.g.\ \command{setmainfont}{Times New Roman}. Check out the \href{http://mirrors.ctan.org/macros/unicodetex/latex/fontspec/fontspec.pdf}{documentation (CTAN.org)} of the \code{fontspec} package for more information. These fonts are not available on Overleaf.
+
+    \item Some fonts are available (both on Overleaf and in your own \LaTeX{} installation) as \definition{packages}. For instance, adding \command{usepackage}{carolmin} enables the command \switch{cminfamily}, which we can use to {\cminfamily create beautiful Carolingian minuscules}. You can find a list of all available font packages in \href{https://www.tug.org/FontCatalogue/}{the \LaTeX{} Font Catalogue (tug.org)}.
+
+    \item Lastly, you can add the font files to your project and use them directly. This is a bit more complicated, but allows you to use fonts that are not available on Overleaf. For more information, see the \href{http://mirrors.ctan.org/macros/unicodetex/latex/fontspec/fontspec.pdf}{documentation (CTAN.org)} of the \code{fontspec} package.
+\end{itemize}
+
+
+\exercise{Try switching the main font to {\charissil Charis SIL (which has excellent support for diacritics) for a little bit. Try to create the character \'{\={a}} now, and then switch} back to the standard font, where \'{\={a}} looks funky.}
+
+\section{Defining your own commands}\label{seccommands}
+
+Since \LaTeX{} is a programming language, you can (and should) define your own commands, especially if you find yourself using the same commands over and over again.
+
+New commands that do not require any arguments can be defined as follows.
+
+\begin{CVerbatim}
+    \newcommand{name}{definition}
+\end{CVerbatim}
+
+The \code{name} is the name of your command (starting with a \texttt{\textbackslash}). When the compiler finds this command, it will replace it with the code in the \code{definition}.\footnote{
+    If there is already a command with your picked name, \LaTeX{} will throw an error. You can redefine existing commands using \code{renewcommand} instead of \code{newcommand}.
+} Suppose, for instance, that we want to make a command for the word \textit{supercalifragilisticexpialidocious} because we cannot remember how to spell it. We can define a new command \switch{supcal} as follows.
+
+\begin{CVerbatim}
+    \newcommand{\supcal}{supercalifragilisticexpialidocious}
+\end{CVerbatim}
+
+In order to define a new command with arguments, you put the amount of required arguments (in square brackets) between the first and second arguments. Then, you can refer to these required arguments in your definition with \code{\#1}, \code{\#2}, etc.
+
+For example, a new command that takes two arguments and prints the first in bold and the second in italics can be defined as follows:
+
+\begin{CVerbatim}
+    \newcommand{\mycoolcommand}[2]{\textbf{#1} \textit{#2}}
+\end{CVerbatim}
+\newcommand{\mycoolcommand}[2]{\textbf{#1} \textit{#2}}
+
+Calling \switch{mycoolcommand}\code{\{John\}\{Mary\}} will now print: \mycoolcommand{John}{Mary}.
+
+Slightly more useful: we can turn the switch command we created to render text in the Charis SIL font into a command.\footnote{
+    As a general note, it is good practice to create commands for recurring types of text that requires special formatting, such as words in a special language, definitions or blocks of code. For instance, a user-defined command \command{author}{\ldots} that is defined as \command{textsc}{\#1} to print out an author's name in small caps, indicates much more clearly what you are writing and allows you to change all instances of author names later, without incidentally changing other instances where you use small caps. In practice, you should hardly have to use the type style commands such as \command{textbf}{\ldots}, \command{textsc}{\ldots} etc.\ directly in your document body.
+}
+
+\begin{CVerbatim}
+    \newcommand{\charis}[1]{{\charissil #1}}
+\end{CVerbatim}
+
+\newcommand{\subscriptor}[2]{#1\textsubscript{\textit{#2}}}
+\exercise{Try making a command called \switch{subscriptor}\code{\{\ldots\}\{\ldots\}} that takes two arguments. It should put the second one in italicised subscript to the first, so that \switch{subscriptor}\code{\{Hands\}\{down\}} becomes \subscriptor{Hands}{down}.}
+
+\newcommand{\hugeify}[1]{{\huge#1}}
+\exercise{Create a command \command{hugeify}{\ldots} that takes one argument and makes it \hugeify{huge}. Make sure the text around it is not affected.}
+
+\section{Commenting out}\label{seccomment}
+
+If there is a line that you do not want in your final PDF but you do not want to delete it either, you can tell \LaTeX{} to ignore it when it is compiling---this is called \definition{commenting out}. In \LaTeX{} this is done with a \texttt{\%}: all text on the same line following this symbol is ignored. Overleaf also has a handy shortcut for toggling this: \keys{\ctrl/\cmd + /}.
+
+When working on larger documents, commenting out sections you are not working on can decrease compilation time. It can also help you find errors in your code: if \LaTeX{} fails and you do not know where the error is, comment out parts of your document incrementally until you find the offending line.
+
+However, if you want a simple percentage sign in your text, you need to type \texttt{\textbackslash\%}, otherwise \LaTeX{} will interpret it as a comment.
+
+\section{Sectioning and table of contents}\label{secdocstruct}
+
+In our \code{main.tex} file, we started off with a line saying \command{section}{Introduction}. This command prints a section header with the title \textit{Introduction}. But apart from that, \LaTeX{} keeps track of every section title and on which page it starts for later to use in the table of contents. \LaTeX{} also automatically numbers sections (which can be referenced, cf.\ Section \ref{secref}) and updates these numbers if sections are added or deleted.
+
+There are also commands for subsections and sub-subsections, chapters and parts. They all have an internal level: sectioning commands with higher levels are embedded in sectioning commands with lower levels (so a chapter, with level 0, can contain sections, with level 1; sections cannot contain chapters, etc.). If necessary, you can also define your own sectioning command on a new level (for instance if you for some reason need a sectioning command that can contain parts). If you would like to adjust the style associated with a particular sectioning command, have a look at the package \code{titlesec}.
+
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{>{\ttfamily}lc}
+        \toprule
+        {\normalfont\bfseries Command}  & \textbf{Level} \\
+        \midrule
+        \command{part}{\ldots}          & -1             \\
+        \command{chapter}{\ldots}       & 0              \\
+        \command{section}{\ldots}       & 1              \\
+        \command{subsection}{\ldots}    & 2              \\
+        \command{subsubsection}{\ldots} & 3              \\
+        \command{paragraph}{\ldots}     & 4              \\
+        \command{subparagraph}{\ldots}  & 5              \\
+        \bottomrule
+    \end{tabular}
+    \caption{Sectioning commands}\label{tblsectioning}
+\end{table}
+
+Then to make a table of contents, just type \switch{tableofcontents} wherever you want it printed (for instance directly after your \switch{maketitle}. A dedicated table of contents for figures and tables can also be instantiated using the commands \switch{listoffigures} and \switch{listoftables}: more on figures and tables in Sections \ref{secfig} and \ref{sectbl}.
+
+Two more things. Sectioning commands can take an optional argument (so between the command and the curly brackets) which is the title of the section (or chapter etc.) as it should be printed in the table of contents. Then, if you don't want a section (or chapter etc.) to receive a number, you can put a \texttt{*} between the command and the curly brackets. However, this will also make that it is not in the table of contents!\footnote{Given the fact that anything is possible in \LaTeX{}, if you don't want a section a number but you do want to have it appear in the table of contents, it is possible using the command \command{addtocontents}{toc}\code{\{\ldots\}}.} So:
+
+\begin{CVerbatim}
+    \section{A}
+    This is section 1, called A both here and in the TOC.
+
+    \section[B]{C}
+    This is section 2, called C here, but B in the TOC.
+
+    \section*{D}
+    This is an unnumbered section, called D.
+    It won't show up in the TOC.
+\end{CVerbatim}
+
+\exercise{
+    Play around with sectioning commands and the table of contents a bit to acquaint yourself with it.
+}
+
+\section{List environments}
+
+\LaTeX{} provides three kinds of lists out of the box, but you can define your own lists if you want to.
+
+\definition{Ordered lists} (numbered lists) are introduced by the \switch{enumerate} environment, \definition{unordered lists} (bullet point lists) by the \switch{itemize} environment. You can embed these environments to create sublists.
+
+Items inside list environments are introduced with \switch{item}. By default, unordered lists use a variety of bullet points, horizontal lines and asterisks for various levels, while ordered lists use Roman/Arabic numerals. For ways to configure this, see the \href{https://www.overleaf.com/learn/latex/lists#Reference_guide}{Overleaf tutorial} and the \code{enumitem} package for more details.
+
+You can also insert an arbitrary symbol for use in a particular item by passing it as an optional argument to the \switch{item} command. See below for an example.
+
+\begin{CVerbatim}
+    \begin{enumerate}
+        \item The first item in an ordered list.
+              \begin{itemize}
+                  \item The second item in an unordered sublist.
+              \end{itemize}
+        \item The third item. Nothing special.
+        \item[\textbf{€}] The fourth item with a custom symbol.
+    \end{enumerate}
+\end{CVerbatim}
+
+\begin{enumerate}
+    \item The first item in an ordered list.
+          \begin{itemize}
+              \item The second item in an unordered sublist.
+          \end{itemize}
+    \item The third item. Nothing special.
+    \item[\textbf{€}] The fourth item with a custom symbol.
+\end{enumerate}
+
+Lastly, the \definition{description} environment deserves special attention. It is used to create a list of terms and their definitions. It is introduced by the \switch{description} environment, and each item is introduced by \switch{item[<term>]}. The term is printed in bold, followed by the definition. For example:
+
+\begin{CVerbatim}
+    \begin{description}
+        \item[Term 1] This is the definition of term 1.
+        \item[Term 2] This is the definition of term 2.
+    \end{description}
+\end{CVerbatim}
+
+\begin{description}
+    \item[Term 1] This is the definition of term 1.  This is a longer sentence to show how text wraps around the definition and is indented relative to the term and the following item.
+    \item[Term 2] This is the definition of term 2.
+\end{description}
+
+\exercise{Try to recreate the following list:
+    \begin{enumerate}
+        \item \LaTeX{} is fun,
+        \item and so is ice cream.
+              \begin{itemize}
+                  \item[?] Is this true?
+                  \item[!] I don't know.
+              \end{itemize}
+        \item Ice cream has the following components.
+              \begin{description}
+                  \item[Milk] contains lots of calcium.
+                  \item[Sugar] is bad for your teeth. Floss regularly.
+              \end{description}
+    \end{enumerate}
+}
+
+\section{Images and figures}\label{secfig}
+
+You can import images using the \code{graphicx} package that Overleaf has already loaded in for us.
+
+\exercise{Upload an image file of your choice with the \menu{Upload} button in the top left of your screen. Supported image files are PDF, JPEG and PNG (with \code{graphicx} at least).
+}
+
+Once you have uploaded your file, \command{includegraphics}{\ldots} can be used to insert it. If the image is a bit too big or too small, you can adjust its scale, width and height as an optional argument (see below). Most often, you will want to define the width or size of a picture relative to the text size (or \switch{textwidth}), so that the picture size changes along with the text dimensions.\footnote{For scaling pictures relative to their original size, use \texttt{[scale = 0.5]} or similar measurements.} Invoking the following command prints Utrecht University's logo to half the width of the text:
+
+\begin{CVerbatim}
+    \includegraphics[width=.5\textwidth]{uu-logo.png}
+\end{CVerbatim}
+
+\includegraphics[width=.5\textwidth]{assets/uu-logo.png}
+
+As you can see, this image is not aligned to the middle of the page. It also lacks a caption and we cannot currently reference it. For these reasons, images are commonly placed in a \code{figure} environment. A figure is a so-called \definition{float}, a bit of content that \LaTeX{} can move around to determine its optimal placement within the document. Figures are numbered automatically and a list of figures can be printed with the command \code{listoffigures}. You would use a figure environment as follows:
+
+
+\begin{CVerbatim}
+    \begin{figure}[ht]
+        \centering
+        \includegraphics[width=.5\textwidth]{assets/uu-logo.png}
+        \caption{This is the university's logo.}
+    \end{figure}
+\end{CVerbatim}
+
+The \code{ht} will have \LaTeX{} try to print the figure `here' (\code{h}), and if that is not possible to print it at the top of the page (\code{t}). Other possible positioning options are \code{b} (bottom of the page) and \code{p} (which will print the image on a dedicated page for figures). You can insist on a particular positioning option by adding an exclamation mark, e.g.\ \code{[h!]}.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=.5\textwidth]{assets/uu-logo.png}
+    \caption{This is the university's logo.}
+    \label{figlogo}
+\end{figure}
+
+\exercise{Upload an image from your computer and place it in your document using the \code{figure} environment. Also try a few positioning options and try adjusting the size of the image.}
+
+\section{References}\label{secref}
+
+You can reference sections, chapters, tables, figures, equations, items in a list etc.\ from anywhere in your document by giving them a label. For example, this section was referenced earlier on, and in order to do that we gave this section a label:
+
+\begin{CVerbatim}
+    \section{Referencing sections and figures}\label{secrefs}
+\end{CVerbatim}
+
+We can reference its number (\ref{secref}) using \command{ref}{secrefs}. For sectioning commands and items in a list, just put the label anywhere inside the section or item. Tables, figures and equations you can give a label inside the environment. You can also reference the page on which something is or starts using \command{pageref}{\ldots}.
+
+If you want your references to be clickable in the final PDF document, import the \code{hyperref} package in your preamble.\footnote{Note that \code{hyperref} is one of the few packages that cares about the order in which it is imported. Try to import it as the \emph{last} in your preamble, as it redefines a lot of commands.}
+
+\begin{CVerbatim}
+    This section starts on page \pageref{secrefs}.
+\end{CVerbatim}
+
+This yields:
+
+\begin{center}
+    This section starts on page \pageref{secref}.
+\end{center}
+
+\LaTeX{} automatically updates all of these references if you decide to remove or add a table, section or figure, saving you a lot of tedious updating.
+
+\exercise{Recreate (in sans-serif): {\sffamily `The logo of our university is displayed in Figure \ref{figlogo} on page \pageref{figlogo}.'} using \command{label}{\ldots}, \command{ref}{\ldots} and \command{pageref}{\ldots}. Make sure that the links are clickable.}
+
+\section{Tables}\label{sectbl}
+
+Tables in \LaTeX{} take some getting used to and introduce a couple of new concepts, but they are not very difficult. An example table is produced below, cf.\ Table \ref{tbltables}.
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{|r|cl|}
+        \hline
+        Country     & Capital   & Inhabitants \\
+        \hline
+        Netherlands & Amsterdam & 17.02 M     \\
+        Germany     & Berlin    & 82.67 M     \\
+        \hline
+    \end{tabular}
+    \caption{A table about two countries.}
+    \label{tbltables}
+\end{table}
+
+\begin{CVerbatim}
+    \begin{table}[ht]
+        \centering
+        \begin{tabular}{|r|cl|}
+            \hline
+            Country     & Capital   & Inhabitants \\
+            \hline
+            Netherlands & Amsterdam & 17.02 M     \\
+            Germany     & Berlin    & 82.67 M     \\
+            \hline
+        \end{tabular}
+        \caption{A table about two countries.}
+        \label{tblcountries}
+    \end{table}
+\end{CVerbatim}
+
+There are many new elements here that we have not seen before. Let's go over them one by one.
+
+\begin{description}
+    \item[\latexenv{table}] creates a \definition{float} environment, just like \code{figure} above.
+    \item[\latexenv{tabular}] contains the actual table.
+    \item[\code{\{|r|cl|\}}] specifies the alignment of the columns and the presence of vertical lines. The \code{r} means that the first column is right-aligned, the \code{c} that the second column is centred, and the \code{l} that the third column is left-aligned. The vertical lines are specified by the \code{|} symbols. So, there are vertical lines in the table on the left, between the first and second column and on the right.
+    \item[\switch{hline}] prints a horizontal line.
+    \item[\code{\&}] separates columns.\footnote{In the example here, the \code{\&}s are all neatly aligned. This is recommended to keep your code readable, but not required. By default, \LaTeX{} will ignore more than one space.}
+    \item[\switch{\textbackslash}] separates rows. These are easy to forget, so make sure you have added them after every row!
+    \item[\command{caption}{\ldots}] adds a caption to the table. This can also be put right after \command{begin}{table} if you prefer your caption to appear above the table.
+\end{description}
+
+Overleaf provides handy tools to create tables in a more visual way without the need to remember all of this. However, the explanation of what the code does is still provided here for future reference.
+
+\exercise{Try to reproduce the following (right-aligned) table.}
+
+\begin{table}[ht!]
+    \flushright
+    \begin{tabular}{r|l}
+        \hline
+        \textbf{Name} & \textbf{Inaugurated} \\\hline
+        Barack Obama  & 2009                 \\
+        Donald Trump  & 2017                 \\
+        Joe Biden     & 2021                 \\\hline
+    \end{tabular}
+    \caption{US Presidents}
+\end{table}
+
+\subsection{Advanced tables}\label{ssecadvtbl}
+
+\subsubsection{\texttt{booktabs}}
+
+The \code{booktabs} package provides three simple commands that are alternatives to the \switch{hline} command for creating horizontal lines in your table: \switch{toprule} (for the top line of your table) \switch{midrule} (after the header) and \switch{bottomrule} at the bottom of your table). The results can be seen in Table \ref{tblmultirows} (below). Vertical lines do not go well in combination with the horizontal lines drawn by \code{booktabs} (try it out and see why!), but many typographical style guides advise against using vertical lines in tables anyway.
+
+
+\subsubsection{Merging cells and columns}\label{ssecmerge}
+
+You can merge cells in a table with the command \switch{multicolumn}.
+
+\begin{CVerbatim}
+    \multicolumn{number of columns}{alignment}{text}
+\end{CVerbatim}
+
+The first argument specifies the number of columns to merge, the second the alignment of the text in the merged cell, and the third the text to put in the merged cell.
+
+In order to merge rows, you will need the package \code{multirow}, which provides the command \switch{multirow}.
+
+\begin{CVerbatim}
+    \multirow{number of rows}{width}{text}
+\end{CVerbatim}
+
+The first argument specifies the number of rows to merge, the second the width of the cell (use \code{*} for the natural width of the text), and the third the text to put in the merged cell. 
+
+An example involving both multirow and multitable is presented here, cf.\ Table \ref{tblmultirows}.
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{lll}
+        \toprule
+        \textbf{Vegetables} & \textbf{Verdict}                   & \textbf{Price} \\
+        \midrule
+        Onion               & Tasty                              & € 1.00         \\
+        Carrot              & \multirow{2}{*}{Yummy}             & € 1.50         \\
+        Tomato              &                                    & € 2.00         \\
+        Parsnip             & \multicolumn{2}{c}{Not tried yet.}                  \\
+        \bottomrule
+    \end{tabular}
+    \caption{My vegetable garden}
+    \label{tblmultirows}
+\end{table}
+
+\small
+\begin{CVerbatim}
+    \begin{table}[ht]
+        \centering
+        \begin{tabular}{lll}
+            \toprule
+            \textbf{Vegetables} & \textbf{Verdict} & \textbf{Price} \\
+            \midrule
+            Onion               & Tasty                     & € 1.00 \\
+            Carrot              & \multirow{2}{*}{Yummy}    & € 1.50 \\
+            Tomato              &                           & € 2.00 \\
+            Parsnip             & \multicolumn{2}{c}{Not tried yet.} \\
+            \bottomrule
+        \end{tabular}
+        \caption{My vegetable garden}
+        \label{tblmultirow}
+    \end{table}
+\end{CVerbatim}
+\normalsize
+
+% Here are a few packages which make your tables look even fancier. Import them in your preamble.
+
+% \subsubsection{\texttt{ltablex}}
+
+% \LaTeX{} encounters some difficulties when cell contents or tables themselves are bigger than the page they are supposed to fit on, but these are all easily to solve! For tables bigger than one page, the package \code{longtable} was invented; for tables containing cells with a lot of text, there is \code{tabularx}. These two packages are conveniently combined into one neat package, \code{ltablex}. Check out the following example.
+
+% \begin{tabularx}{\linewidth}{XX}
+%     \toprule
+%     \textbf{Column one} & \textbf{Column two} \\
+%     \midrule
+%     \endhead
+
+%     \bottomrule
+%     & \hfill \textit{Continued on next page} \\
+%     \endfoot
+
+%     \bottomrule
+%     \caption{Loooooooooong table}\label{tbltest}
+%     \endlastfoot
+
+%     Very long text to be put in the first cell & Even longer text that should be put in the second cell and which would definitely go over the edge if it wasn't for \texttt{tabularx} \\
+
+%     Another line & Yet another line \\
+%     Another line & Yet another line \\
+%     Another line & Yet another line \\
+%     Another line & Yet another line \\
+% \end{tabularx}
+
+% \begin{CVerbatim}
+%     \begin{tabularx}{\linewidth}{XX}
+%     \toprule
+%     \textbf{Column one} & \textbf{Column two} \\
+%     \midrule
+%     \endhead
+
+%     \bottomrule
+%     & \hfill \textit{Continued on next page} \\
+%     \endfoot
+
+%     \bottomrule
+%     \caption{Loooooooooong table}\label{tbltest}
+%     \endlastfoot
+
+%     Very long text to be put in the first cell & Even longer text 
+%     that should be put in the second cell and which would definitely 
+%     go over the edge if it wasn't for \texttt{tabularx} \\
+
+%     Another line & Yet another line \\
+%    ...
+%     Another line & Yet another line \\
+% \end{tabularx}
+% \end{CVerbatim}
+
+% Note that this table does not need a \latexenv{table} environment or the command \switch{centering} to keep the table on the center of the page. It does all of that on its own!
+
+% The command \switch{endhead} means: all the lines above this command need to be repeated on every new page. In addition, everything above the command \switch{endfoot} is repeated at the bottom of the page whenever \LaTeX{} has to put a table on multiple pages. Lastly, everything above \switch{endlastfoot} is only printed at the very end, which is why we put our \command{caption}{\ldots} there.
+
+% Basically, a \switch{tabularx} says: I want to make a table which is as wide as the line itself \switch{linewidth}, and I have two columns for this (the two \code{X}'es in the second mandatory argument). The use of \code{X} as a column type here means: ``\LaTeX{} should try to find the best size for this cell, as long as the resulting table stays within the size of \switch{linewidth}." Generally, \LaTeX{} will try many different cell sizes until it finds a good one which fits the contents with good-looking line breaks. This makes sure that the table will never go wider than the width you set for it, but it may take longer to compile.
+
+% Note that you can change \switch{linewidth} in the first mandatory argument if you want a different size limit (for instance, to `50mm'). You can also combine \code{X} columns (with no fixed size) with the regular \switch{l}, \switch{c} and \switch{r} columns mentioned before.
+
+
+% \subsubsection{\texttt{threeparttable}}
+
+% This package allows you to add table notes at the bottom of your table. An example together with its code are given here.
+
+% \begin{table}[ht]
+%     \centering
+%     \begin{threeparttable}[h!]
+%         \begin{tabular}{llll}
+%             \toprule
+%             \textbf{Spring} & \textbf{Summer}     & \textbf{Fall} & \textbf{Winter}      \\
+%             \midrule
+
+%             Hazel trees     & Plum trees\tnote{1} & Apple trees   & Money trees\tnote{2} \\
+
+%             \bottomrule
+%         \end{tabular}
+%         \begin{tablenotes}
+%             \item [1] Plums are great.
+%             \item [2] Not sure if these are real though.
+%         \end{tablenotes}
+%         \caption{Trees I like}\label{tbltrees}
+%     \end{threeparttable}
+% \end{table}
+
+% \begin{CVerbatim}
+%     \begin{table}[ht]
+%        \centering
+%       \begin{threeparttable}[h!]       
+%        \begin{tabular}{llll}
+%               \toprule
+%               \textbf{Spring} & \textbf{Summer} & \textbf{Fall} & \textbf{Winter} \\
+%               \midrule
+
+%               Hazel trees & Plum trees\tnote{1} & Apple trees & Money trees\tnote{2} \\
+
+%               \bottomrule      
+%         \end{tabular}
+%         \begin{tablenotes}
+%             \item [1] Plums are great.
+%             \item [2] Not sure if these are real though.
+%         \end{tablenotes}
+%         \caption{Trees I like}\label{tbltrees}
+%        \end{threeparttable}
+% \end{table}
+% \end{CVerbatim}
+
+% Note that this table consists of three parts (hence the name): there is a \code{table} environment which contains 1.\ a \code{threeparttable} environment, which contains 2.\ a regular \code{tabular} and immediately after that 3.\ a \code{tablenote} environment. You can put notes in your table where ever you want with \command{tnote}{\#}, and refer to these notes with \code{item[\#]} in the \code{tablenote} environment. Just add \command{usepackage}{threeparttable} to your preamble and you're good to go!\footnote{To change the size of the table notes, just copy and paste the following three lines into your preamble: \\ \switch{makeatletter} \\ \switch{g\@addto\@macro\textbackslash TPT@defaults\{\textbackslash footnotesize\}}  \\ \switch{makeatother}}
+
+% \exercise{Replicate Table \ref{tblthreepart} below, using \code{booktabs} and \code{threeparttable}.}
+
+% \begin{table}[ht]
+%     \centering
+%     \begin{threeparttable}[h!]
+%         \begin{tabular}{ccc}
+%             \toprule
+%             \textbf{Berlin} & \textbf{London} & \textbf{Amsterdam} \\
+%             \midrule
+
+%             Anna\tnote{1}   & Colin           & Laura              \\
+%             Helmut          & Sarah           & Rogier\tnote{2}    \\
+
+%             \bottomrule
+%         \end{tabular}
+%         \begin{tablenotes}
+%             \item [1] Smart girl; knows LaTeX.
+%             \item [2] Still owes me money!
+%         \end{tablenotes}
+%         \caption{My friends}\label{tblthreepart}
+%     \end{threeparttable}
+% \end{table}
+
+\section{Bibliography management}\label{secbib}
+
+\LaTeX{} can save you a lot of problems when managing your bibliography and citing references. The available tools are highly customisable and powerful, so we will only be scratching the surface here, using the \biblatex{} package.\footnote{Other bibliography packages for \LaTeX{} you might come across are \code{natbib} and \code{bibtex}.}
+
+\medskip
+
+All of your bibliographical references are stored in a file with the \code{.bib} extension. An example for such an entry is given here.
+
+\begin{CVerbatim}
+    @article{lander1966counterexample,
+        title={Counterexample to {E}uler’s conjecture on sums of
+                like powers},
+        author={Lander, L.~J. and Parkin, T.~R. and others},
+        journal={Bulletin of the American Mathematical Society},
+        volume={72},
+        number={6},
+        pages={1079},
+        year={1966}
+    }
+\end{CVerbatim}
+
+In this bibliography entry, we define with \code{@article} that the reference is an article. There are many different entry types, including \code{@book}, \code{@phdthesis} and \code{@unpublished} for papers that are yet unpublished. What follows is the \definition{reference key}: \code{lander1966counterexample}, which is used to cite this publication in your text.\footnote{
+    You can pick whatever you want as your key, but it is common practice to use a combination of the last name of the first author, the year of publication and one or two keywords from the publication title.
+} Make sure your \code{.bib} file does not contain any duplicate keys. Then we define the \definition{metadata}, such as title, author and the name of the journal the article was published in.\footnote{
+    Note the use of the comma to separate last from first names, and of \code{and} to separate entire names. If you end with \code{and others}, \textsc{Bib}\LaTeX{} will automatically replace this with \emph{et al.}\ if your style requires it. Also note the use of \code{\textasciitilde} to tell \LaTeX{} not to break the line at the space between the authors' initials.
+} Different entry types can have different metadata: check \href{https://en.wikibooks.org/wiki/LaTeX/Bibliography_Management#biblatex}{this page for an overview (Wikibooks)}. It is okay not to include all metadata: if you don't know the volume of the journal it was published in, simply leave it out the \code{.bib} file, \biblatex{} takes care of it when citing it.
+
+\exercise{Create a new file in Overleaf, call it \code{bib.bib} and copy the reference above into this file.}
+
+Now we need to import \biblatex{}, and \LaTeX{} needs to be made aware of your brand new bibliography file. We do this by adding the following lines to our preamble.
+
+\begin{CVerbatim}
+    \usepackage[style=authoryear,backend=biber]{biblatex}
+    \addbibresource{bib.bib}
+\end{CVerbatim}
+
+The optional argument \code{[style=authoryear]} tells \LaTeX{} which bibliography style to use. Other options are \code{apa}, \code{numeric}, among many others. Have a look at \href{https://www.overleaf.com/learn/latex/Biblatex_citation_styles}{this page} for a list.\footnote{
+    The optional argument \code{[backend=biber]} tells \LaTeX{} which program to use to compile your bibliography. \code{biber} is the most recent and powerful program, but \code{bibtex} is still widely used.
+}
+
+\exercise{Go to Google Scholar, search for \emph{vertegaal filling in the facts}, and get the \biblatex{} citation by clicking on the two quotes underneath the first hit. Click the \menu{BibTeX} button to obtain the reference. Copy it into your \code{.bib} file.}
+
+Now that \biblatex{} is fully set up, we can start citing our sources! The commands you are most likely to use are the following, cf.\ Table \ref{tblcite}.
+
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{ll}
+        \toprule
+        \textbf{Command}                            & \textbf{Result}                      \\
+        \midrule
+        \verb|\cite[20]{vertegaal2017filling}|      & \cite[20]{vertegaal2017filling}      \\
+        \verb|\parencite[20]{vertegaal2017filling}| & \parencite[20]{vertegaal2017filling} \\
+        \verb|\footcite[20]{vertegaal2017filling}|  & \footnotemark                        \\
+        \verb|\textcite[20]{vertegaal2017filling}|  & \textcite[20]{vertegaal2017filling}  \\
+        \bottomrule
+    \end{tabular}
+    \caption{Citing commands}\label{tblcite}
+\end{table}
+
+% Standard LaTeX does not allow footnotes in tables. 
+% There are packages that do allow this, but this is an easy work-around: 
+% \footnotetext{} attaches text to the last used \footnotemark.
+\footnotetext{\cite[20]{vertegaal2017filling}.}
+
+\exercise{Cite pages 250--253 in Vertegaal 2017.}
+
+When citing multiple references at once, just pass multiple reference keys as arguments at the same time, separated by a comma (no space!). If you want to add things like ``see'' or ``pp.\ 48--49'', you can do that as optional arguments:\footnote{
+    Helpful (if pedantic) tip: typing \code{--} (two hyphens) creates an \emph{en dash}, the width of `N', used for inclusive ranges such as page numbers or dates: `5--12 June'. Three hyphens---that is \code{---} without spaces---create a so-called \emph{em dash}, commonly defined as the width of `M'. This is used for parenthetical remarks, as in the previous sentence.
+}
+
+\begin{CVerbatim}
+    \parencite[see][pp.~48--49]{lander1966counterexample}
+\end{CVerbatim}
+
+yields
+
+\begin{center}
+    \parencite[see][pp.~48--49]{lander1966counterexample}
+\end{center}
+
+Note the use of \code{\textasciitilde} to prevent \LaTeX{} from breaking the line at the space between the page numbers. 
+
+\medskip
+
+Finally, to print your bibliography, just type \switch{printbibliography} wherever you want your bibliography to be printed.
+
+\exercise{
+    Find a reference on Google Scholar of a paper or book that you like, and add it to \code{bib.bib}. Refer to it elsewhere in your document. Change the reference style to \code{[style=authoryear-icomp]} and see what happens.
+}
+\section{Troubleshooting}\label{sects}
+
+\subsection{Interpreting errors}\label{ssecerror}
+
+When compiling your document, you may run into \emph{errors} or \emph{warnings} produced by the \LaTeX{} compiler. Overleaf tells you exactly how many error there are: the button next to the \textbf{Recompile} button is the log---the number on that is the amount of errors. If it's red, there are errors, if it's yellow, there are only warnings.
+
+\definition{Errors} are fatal mistakes in your code, causing \LaTeX{} to crash without fully compiling your document. These should always be fixed. \definition{Warnings} are less serious; they are meant to indicate that the final result of compilation may look different from what you intended. Always check them out, but sometimes they can be ignored. A good tip: you can click on an error to jump to the offending line in your code.
+
+But what do these error messages actually mean? Usually the log messages give you a clue what is going on, so reading those really helps. One frequently recurring warning \code{Overfull hbox} is dealt with in more detail below.
+
+If there are errors that you don't understand, do check \href{https://www.overleaf.com/learn/latex/Errors}{the Overleaf tutorial page on errors}, or enter your question into Google. In 90\% of the cases, you are not alone. Usually, one of the first hits will lead you to \href{https://tex.stackexchange.com/}{\definition{StackExchange}}, which is where \LaTeX{} users can ask questions to experts and \LaTeX{} developers. If you cannot find your answer there, post a question, and you will most likely have your answer within 24 hours. (Read the \href{https://tex.stackexchange.com/help/asking}{guidelines} first before you do, however.) 
+
+For questions about specific packages, be sure to read the so-called \definition{package documentation} (the package's manual and description, so to say) first. You can easily find that using a Google search (e.g.\ `graphicx documentation'). This will almost always bring you to the CTAN website (see Section \ref{ssecdocstruct}), where most \LaTeX{} packages are hosted.\footnote{More technical users may also type \code{texdoc graphicx} in their terminal to open the documentation.}
+
+\subsection{Over- or underfull hboxes}\label{ssechbox}
+
+By default, \LaTeX{} is quite fussy when it comes to fitting text on a line. Sometimes it does not manage to upholds its standards, and it will tell you so in the log, with a message like \code{Overfull \textbackslash{}hbox (51.48561pt too wide) in paragraph at lines 25--29.}. Since these warnings are such a common source of frustration, they are treated in more detail here.
+
+An \code{Overfull \textbackslash{}hbox error} indicates that \LaTeX{} has had to stretch the space in between words and sentences beyond its preset limits (`underful hbox') or that it could not fit all words on one line, leaving some to stick out into the paper margin (`overfull hbox').\footnote{The term \emph{hbox} stands for `horizontal box' and refers to the line/box \LaTeX{} attempts to fill.}
+
+Not all of these errors are disruptive or `ugly', so don't panic and always check them out before submitting anything important to a journal or your supervisor.
+
+If you are keen on solving these errors, there are a few things you can do. Here they are, in order of increasing desperation.
+
+\begin{enumerate}
+    \item Import the \code{babel} package and \code{microtype} packages. Also when you do not have any \code{hbox} errors, these are recommended. \code{Babel} loads hyphenation settings for specific languages, and \code{microtype} stretches the kerning and character widths ever so slightly based on a given font's properties. These are often just enough to fix a nasty \code{hbox} warning.
+    \item If \LaTeX{} still cannot break off a long word, help it along by indicating where the potential breaks are, using \code{\textbackslash -}. For example, we can teach \LaTeX{} how to break the Dutch word \emph{angstschreeuw} by writing it as \code{angst\textbackslash-schreeuw}.\footnote{You can also define hyphenation rules for the entire document, by adding the command \command{hyphenation}{angst\textbackslash-schreeuw} to the preamble.}
+    \item Try to rephrase. By moving words around, \LaTeX{} can often find a better way to fit everything on the line.
+    \item Set a higher \code{emergencystretch}. This increases the amount of whitespace \LaTeX{} can add to a line before it is considered `overfull'. For example, \command{setlength}{emergencystretch\{3em\}} will allow \LaTeX{} to add 3em of whitespace to a line before it is considered `overfull'. Use the smallest value that solves your problem, and be sure to wrap this in a \code{begingroup} and \code{endgroup} command, so that the change is only temporary.
+    \item Switch to sloppy mode using \switch{sloppy}. This will allow \LaTeX{} to be very loose with its placement and generally leads to ugly spacing, so only use this is you are really desperate!
+\end{enumerate}
+
+\subsection{Where to go for help?}\label{ssechelp}
+
+Getting good at \LaTeX{} is a skill you simply have to train. A personal tip to improve your confidence is to take an existing document and convert it, as best as you can, to \LaTeX{}. This will force you to look up a lot of things, and you will learn a lot in the process. 
+
+If you would like us to help you with your code, do not hesitate to contact our team of developers at the \href{https://cdh.uu.nl/research/consultancy/#research-software}{Centre for Digital Humanities} or come in during one of our \href{https://cdh.uu.nl/research/consultancy/#walk-in-hours}{walk-in hours}. We are always happy to help!
+
+Remember that while \LaTeX{} has a steep learning curve, it is a very powerful tool that will save you a lot of time and frustration in the long run. The question `Can I do X in \LaTeX{} is almost always to be answered with `Yes, you can!'. It is just a matter of finding out how.
+
+\end{document}
