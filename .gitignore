@@ -8,7 +8,7 @@
 *.synctex.gz
 *.synctex
 *.xdv
-*.bbl
+*.bbl*
 *.bcf
 *.blg
 *.tex.blg
@@ -17,3 +17,5 @@
 *.vrb
 *.toc
 
+# We do not own the following files, so we ignore them.
+brill/

@@ -24,6 +24,8 @@
 \usepackage{carolmin}           % Enables \cminfamily for carolingian minuscule.
 \usepackage{hyperref}           % Allows clickable hyperlinks in the text.
 \hypersetup{colorlinks = true, urlcolor = blue}
+\urlstyle{same}                 % Keep URLs in the same font as the surrounding text.
+
 
 % New font families for Charis SIL and Noto Sans JP.
 % This will not work unless you have a directory 'fonts' 
@@ -77,11 +79,9 @@
     \stepcounter{exercisecounter}
 }
 
-\urlstyle{same}
-
 \title{\LaTeX{} for the Humanities}
 \author{Dr.\ Xander Vertegaal\\\texttt{a.j.j.vertegaal@uu.nl}}
-\date{28th February 2024}
+\date{6th October 2026}
 
 \begin{document}
 
@@ -111,11 +111,11 @@ Once you've created a project, you will end up in the editor. The editor consist
     \item[Right] is the \definition{PDF preview} of your current project, so that you can check if everything is going according to plan. You can click \menu{Recompile} to tell Overleaf to update to PDF to its latest version (or press \keys{\ctrl/\cmd + Enter} or \keys{\ctrl/\cmd + S}).
 \end{description}
 
-Now lets add some text to the middle of the screen and tell \LaTeX{} to recompile.
+Now lets add some text to the middle of the screen and recompile.
 
 \exercise{Add `Hello World!'\ somewhere in between \command{begin}{document} and \command{end}{document} and recompile your document.}
 
-Lo and behold! You have just created your first \LaTeX{} document! You can download it as a PDF by clicking the \faDownload\ button, or by clicking \menu{Menu>PDF}. The source code can be downloaded by clicking \menu{Menu>Source}.\footnote{There is a also a button labeled \faFileTextO\ that allows you to view the `raw' compiler logs. We will return to this later in the tutorial, cf.\ Section \ref{ssecerror}.}
+Lo and behold! You have just created your first \LaTeX{} document! You can download it as a PDF by clicking the \faDownload\ button, or by clicking \menu{File>Download>Download as PDF}. You can also download the source code (ZIP) from here.\footnote{There is a also a button labeled \faFileTextO\ that allows you to view the `raw' compiler logs. We will return to this later in the tutorial, cf.\ Section \ref{ssecerror}. The same menu offers a download in DOCX format. This is convenient for colleagues who do not use \LaTeX, but it is not recommended to use this for your own writing, as the conversion is not perfect.}
 
 
 \subsection{\LaTeX{} commands}\label{sseccommands}
@@ -348,7 +348,7 @@ To create \emph{vertical whitespace} between two lines, just like the one above 
     \item \switch{vfill} puts the following paragraph at the bottom of the page and inserts as much whitespace as needed between that paragraph and the preceding one.
 \end{itemize}
 
-The precise height of these skips varies depending on the font (size) and the content of the page. \LaTeX{} can stretch or shrink these skips a bit if it encounters problems while filling the page. This is why the first four \definition{rubber lengths} are generally more appropriate than \command{vspace}{\ldots}.
+The precise height of these \definition{skips} varies depending on the font (size) and the content of the page. \LaTeX{} can stretch or shrink these skips a bit if it encounters problems while filling the page. This is why the first four \definition{rubber lengths} are generally more appropriate than \command{vspace}{\ldots}.\footnote{The space between paragraphs is influenced by the \switch{parskip} length, which can be adjusted in the preamble (with \command{setlength}{\switch{parskip}}). Manually updating \switch{parskip} is very error-prone, however, so it is recommended to use the \code{parskip} package, which lets you change the \switch{parskip} in a safe, controlled way.}
 
 \medskip
 
@@ -399,14 +399,14 @@ Diacritics and special characters in \LaTeX{} can be entered with (you guessed i
         Dotless i or j        & \switch{i} or \switch{j}      & \i{} or \j{}    \\
         \bottomrule
     \end{tabular}
-    \caption{Diacritics in \LaTeX{}}\label{tbldiacr}
+    \caption{Commonly used diacritics in \LaTeX{}}\label{tbldiacr}
 \end{table}
 
 Putting diacritics on capital letters works in the same way, and you can even combine multiple diacritics if your font allows it: \={\d{n}} (\verb|\={\d{n}}|).\footnote{The standard font provided by \LaTeX{} is not well-suited for this. As detailed here \url{https://tex.stackexchange.com/questions/159291/multiple-diacritics-on-one-character}, freely downloadable fonts such as \definition{Brill} or \definition{Charis SIL} have better support for this.}
 
 \medskip
 
-You may already have hotkeys or keyboard layouts set up to directly enter these characters and other modified characters in the text editor. At this point, \LaTeX's age shines through. It was developed in the 1980s, when the internet was still in its infancy and the world was a much less globalised place. As such, it was not designed to handle non-Latin scripts. If you try to copy and paste the character \emph{ą} or a non-western character such as \japanese{猫} in your text editor, it will fail, even if your font supports it. If this happens to you, it may be a good idea to switch to a more modern compiler. \hologo{XeLaTeX} is able to interpret a wider range of characters than the traditional \LaTeX{} or \hologo{pdfLaTeX} compilers. To switch to \hologo{XeLaTeX}, select \menu{XeLaTeX} at \menu{Menu>Compiler} in Overleaf.
+You may already have hotkeys or keyboard layouts set up to directly enter these characters and other modified characters in the text editor. At this point, \LaTeX's age shines through. It was developed in the 1980s, when the internet was still in its infancy and the world was a much less globalised place. As such, it was not designed to handle non-Latin scripts. If you try to copy and paste the character \emph{ą} or a non-western character such as \japanese{猫} in your text editor, it will fail, even if your font supports it. If this happens to you, it may be a good idea to switch to a more modern compiler. \hologo{XeLaTeX} is able to interpret a wider range of characters than the traditional \LaTeX{} or \hologo{pdfLaTeX} compilers. To switch to \hologo{XeLaTeX}, select \menu{XeLaTeX} at \menu{File>Settings>Compiler} in Overleaf.
 
 \exercise{Try to reproduce the following (non-sensical) combinations: \H{p}, \={g}, \d{i}, \d{*}.}
 
@@ -494,8 +494,10 @@ Slightly more useful: we can turn the switch command we created to render text i
     \newcommand{\charis}[1]{{\charissil #1}}
 \end{CVerbatim}
 
+This allows us to write \switch{charis}\code{\{Hello\}} to print \ipa{Hello} in the Charis SIL font.
+
 \newcommand{\subscriptor}[2]{#1\textsubscript{\textit{#2}}}
-\exercise{Try making a command called \switch{subscriptor}\code{\{\ldots\}\{\ldots\}} that takes two arguments. It should put the second one in italicised subscript to the first, so that \switch{subscriptor}\code{\{Hands\}\{down\}} becomes \subscriptor{Hands}{down}.}
+\exercise{Try making a command called \switch{subscriptor} that takes two arguments. It should put the second one in italicised subscript to the first, so that \switch{subscriptor}\code{\{Hands\}\{down\}} becomes \subscriptor{Hands}{down}.}
 
 \newcommand{\hugeify}[1]{{\huge#1}}
 \exercise{Create a command \command{hugeify}{\ldots} that takes one argument and makes it \hugeify{huge}. Make sure the text around it is not affected.}
@@ -534,7 +536,7 @@ There are also commands for subsections and sub-subsections, chapters and parts.
 
 Then to make a table of contents, just type \switch{tableofcontents} wherever you want it printed (for instance directly after your \switch{maketitle}. A dedicated table of contents for figures and tables can also be instantiated using the commands \switch{listoffigures} and \switch{listoftables}: more on figures and tables in Sections \ref{secfig} and \ref{sectbl}.
 
-Two more things. Sectioning commands can take an optional argument (so between the command and the curly brackets) which is the title of the section (or chapter etc.) as it should be printed in the table of contents. Then, if you don't want a section (or chapter etc.) to receive a number, you can put a \texttt{*} between the command and the curly brackets. However, this will also make that it is not in the table of contents!\footnote{Given the fact that anything is possible in \LaTeX{}, if you don't want a section a number but you do want to have it appear in the table of contents, it is possible using the command \command{addtocontents}{toc}\code{\{\ldots\}}.} So:
+Two more things. Sectioning commands can take an optional argument (so between the command and the curly brackets) which is the title of the section (or chapter etc.) as it should be printed in the table of contents. Then, if you don't want a section (or chapter etc.) to receive a number, you can put a \texttt{*} between the command and the curly brackets. However, this will also cause it not to appear in the table of contents!\footnote{Before you ask: if you \emph{don't} want a section a number yet \emph{do} want to have it appear in the table of contents, you can use the command \command{addtocontents}{toc}\code{\{\ldots\}}.} So:
 
 \begin{CVerbatim}
     \section{A}
@@ -651,7 +653,7 @@ The \code{ht} will have \LaTeX{} try to print the figure `here' (\code{h}), and 
 
 \section{References}\label{secref}
 
-You can reference sections, chapters, tables, figures, equations, items in a list etc.\ from anywhere in your document by giving them a label. For example, this section was referenced earlier on, and in order to do that we gave this section a label:
+You can reference sections, chapters, tables, figures, equations, items in a list etc.\ from anywhere in your document by giving them a label. For example, this section was referenced earlier on, and in order to do that we gave this section a label using the command \command{label}{\ldots}, supplying a unique name of your choice.
 
 \begin{CVerbatim}
     \section{Referencing sections and figures}\label{secrefs}
@@ -717,7 +719,7 @@ There are many new elements here that we have not seen before. Let's go over the
     \item[\code{\{|r|cl|\}}] specifies the alignment of the columns and the presence of vertical lines. The \code{r} means that the first column is right-aligned, the \code{c} that the second column is centred, and the \code{l} that the third column is left-aligned. The vertical lines are specified by the \code{|} symbols. So, there are vertical lines in the table on the left, between the first and second column and on the right.
     \item[\switch{hline}] prints a horizontal line.
     \item[\code{\&}] separates columns.\footnote{In the example here, the \code{\&}s are all neatly aligned. This is recommended to keep your code readable, but not required. By default, \LaTeX{} will ignore more than one space.}
-    \item[\switch{\textbackslash}] separates rows. These are easy to forget, so make sure you have added them after every row!
+    \item[\switch{\textbackslash}] separates rows. Add these between each row. (They are really easy to forget!)
     \item[\command{caption}{\ldots}] adds a caption to the table. This can also be put right after \command{begin}{table} if you prefer your caption to appear above the table.
 \end{description}
 
@@ -1000,15 +1002,13 @@ Now that \biblatex{} is fully set up, we can start citing our sources! The comma
 
 \exercise{Cite pages 250--253 in Vertegaal 2017.}
 
-When citing multiple references at once, just pass multiple reference keys as arguments at the same time, separated by a comma (no space!). If you want to add things like ``see'' or ``pp.\ 48--49'', you can do that as optional arguments:\footnote{
+When citing multiple references at once, just pass multiple reference keys as arguments at the same time, separated by a comma (no space!). If you want to add things like ``see'' or ``pp.\ 48--49'', supply these as optional arguments:\footnote{
     Helpful (if pedantic) tip: typing \code{--} (two hyphens) creates an \emph{en dash}, the width of `N', used for inclusive ranges such as page numbers or dates: `5--12 June'. Three hyphens---that is \code{---} without spaces---create a so-called \emph{em dash}, commonly defined as the width of `M'. This is used for parenthetical remarks, as in the previous sentence.
 }
 
 \begin{CVerbatim}
     \parencite[see][pp.~48--49]{lander1966counterexample}
 \end{CVerbatim}
-
-yields
 
 \begin{center}
     \parencite[see][pp.~48--49]{lander1966counterexample}
@@ -1027,15 +1027,20 @@ Finally, to print your bibliography, just type \switch{printbibliography} wherev
 
 \subsection{Interpreting errors}\label{ssecerror}
 
-When compiling your document, you may run into \emph{errors} or \emph{warnings} produced by the \LaTeX{} compiler. Overleaf tells you exactly how many error there are: the button next to the \textbf{Recompile} button is the log---the number on that is the amount of errors. If it's red, there are errors, if it's yellow, there are only warnings.
+When compiling your document, you may run into \emph{errors} or \emph{warnings} produced by the \LaTeX{} compiler. You can inspect these using the button next to the \textbf{Recompile} button; the number on that is the amount of errors. If it's red, there are \definition{errors}, if it's yellow, there are only \definition{warnings}.
 
-\definition{Errors} are fatal mistakes in your code, causing \LaTeX{} to crash without fully compiling your document. These should always be fixed. \definition{Warnings} are less serious; they are meant to indicate that the final result of compilation may look different from what you intended. Always check them out, but sometimes they can be ignored. A good tip: you can click on an error to jump to the offending line in your code.
+\begin{description}
+    \item[Errors (red)] are fatal mistakes in your code, causing \LaTeX{} to crash without fully compiling your document. These should always be fixed.
+    \item[Warnings (orange)] are less serious; they are meant to indicate that the final result of compilation may look different from what you intended. Always check them out, but sometimes they can be ignored. A good tip: editors such as Overleaf allow you to click on an error to jump to the offending line in your code.
+\end{description}
 
-But what do these error messages actually mean? Usually the log messages give you a clue what is going on, so reading those really helps. One frequently recurring warning \code{Overfull hbox} is dealt with in more detail below.
+But what do these error messages actually mean? Usually the log messages give you a clue what is going on, so reading those really helps. Common error messages are \code{Missing \} inserted.}, meaning that a closing brace is missing, and \code{Undefined control sequence}, which means that \LaTeX{} does not understand a command that you used. One frequently recurring warning \code{Overfull hbox} is dealt with in more detail below.
 
 If there are errors that you don't understand, do check \href{https://www.overleaf.com/learn/latex/Errors}{the Overleaf tutorial page on errors}, or enter your question into Google. In 90\% of the cases, you are not alone. Usually, one of the first hits will lead you to \href{https://tex.stackexchange.com/}{\definition{StackExchange}}, which is where \LaTeX{} users can ask questions to experts and \LaTeX{} developers. If you cannot find your answer there, post a question, and you will most likely have your answer within 24 hours. (Read the \href{https://tex.stackexchange.com/help/asking}{guidelines} first before you do, however.) 
 
 For questions about specific packages, be sure to read the so-called \definition{package documentation} (the package's manual and description, so to say) first. You can easily find that using a Google search (e.g.\ `graphicx documentation'). This will almost always bring you to the CTAN website (see Section \ref{ssecdocstruct}), where most \LaTeX{} packages are hosted.\footnote{More technical users may also type \code{texdoc graphicx} in their terminal to open the documentation.}
+
+Lastly, AI tools such as ChatGPT or Claude, which have been trained on large corpora of StackExchange questions and answers, can be very helpful in interpreting error messages and providing solutions. However, always check the answers you get from AI tools, as they are not always correct.
 
 \subsection{Over- or underfull hboxes}\label{ssechbox}
 
@@ -1054,6 +1059,40 @@ If you are keen on solving these errors, there are a few things you can do. Here
     \item Set a higher \code{emergencystretch}. This increases the amount of whitespace \LaTeX{} can add to a line before it is considered `overfull'. For example, \command{setlength}{emergencystretch\{3em\}} will allow \LaTeX{} to add 3em of whitespace to a line before it is considered `overfull'. Use the smallest value that solves your problem, and be sure to wrap this in a \code{begingroup} and \code{endgroup} command, so that the change is only temporary.
     \item Switch to sloppy mode using \switch{sloppy}. This will allow \LaTeX{} to be very loose with its placement and generally leads to ugly spacing, so only use this is you are really desperate!
 \end{enumerate}
+
+\section{External tools: Overleaf and AI assistants}\label{secexternal}
+
+There are many external tools that can make your life easier when working with \LaTeX{}, and each come with their own set of advantages and disadvantages. We will go over a few of them here.
+
+\subsection{Overleaf}\label{ssecoverleaf}
+
+Overleaf (formerly ShareLaTeX) is a very convenient way to get started with \LaTeX{}: you do not have to download and install \LaTeX{} yourself, your projects are stored in the cloud, common packages are already installed, and it is easy to share your work with collaborators and leave reviews right in the document. It also provides integrations with Zotero/Mendeley and has a built-in AI tool that can help you with your code.
+
+At the same time, there are some disadvantages to using Overleaf. It is a web-based tool, so you need an internet connection to work on your documents, and the free tier has serious limitations when it comes to compilation time and storage space. For anything larger than a document of a few pages, working on the free tier of Overleaf becomes impractical, if not impossible. The paid tiers remove these limitations, but they are quite steeply priced for non-students (21 EUR/month as of September 2026). Students are eligible for a heavy discount, but it only lasts while you are a student. It is easy to become reliant on Overleaf in this way.
+
+If you are serious about working with \LaTeX{}, I highly recommend installing it on your own computer. It is a bit more work to set up, but it is free and gives you full control over your documents and offline access. Reach out to us (see \ref{ssechelp}) if you need help setting up a local installation of \LaTeX{}.
+
+\subsection{AI tools}\label{ssecai}
+
+AI tools such as ChatGPT, Claude or Overleaf's built-in AI assistant `TeXGPT' can be very helpful to avoid frustration writing \LaTeX{} code:
+
+\begin{description}
+    \item[Troubleshooting] If you run into an error you do not understand or cannot find the source of the problem, you can copy the error message and the relevant code (if you know where the error stems from) and ask the AI to explain it to you and provide a fix.
+    \item[Explaining] If you are reading someone else's code and do not understand a certain command or package, you can ask the AI to explain it to you in simple terms.
+    \item[Scaffolding] If you are trying to create a certain document structure, you can ask the AI to generate a template for you, which you can then fill in with your own content.
+    \item[Quick conversion] For an initial quick conversion of a Word document to \LaTeX{}, you can ask the AI to convert it for you. However, the results are often not perfect, so be sure to check the code and make sure it is correct. 
+\end{description}
+
+At the same time there are a few things to be mindful of:
+
+\begin{description}
+    \item[Accuracy] AI tools are not always correct. They can make mistakes, and they do not always understand the context of your document. Always check the code they generate for you, and do not blindly copy and paste it into your document.
+    \item[Over-reliance] If you offload too much thinking to AI, you may not learn the skills you need to become a proficient \LaTeX{} user. Use them as a tool to help you learn, not as a replacement for learning.
+    \item[Privacy] Be careful about what you share with AI tools and remove confidential/personal information from your prompts. Companies that provide AI tools are not always clear on what happens with the data/intellectual property you provide.
+    \item[Responsibility] You are responsible for your code. Make sure you understand what the code does and be able to defend it if necessary.
+\end{description}
+
+AI tools are especially helpful if you know \LaTeX{} well enough and want to skip over the tedious parts. Use them sparingly if you are still learning \LaTeX, as you will learn a lot more by writing the code yourself and looking up the things you do not understand.
 
 \subsection{Where to go for help?}\label{ssechelp}
 
