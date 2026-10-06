@@ -1,6 +1,6 @@
 # LaTeX Workshop
 
-This repository contains materials for _LaTeX for the Humanities_, a two-hour introductory workshop for LaTeX aimed at students and staff members working at the Faculty of Humanities of Utrecht University.
+This repository contains materials for _LaTeX for the Humanities_, an introductory workshop for LaTeX aimed at students and staff members working at the Faculty of Humanities of Utrecht University.
 
 There are two main `.tex` files in this repository.
 
