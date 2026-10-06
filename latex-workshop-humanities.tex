@@ -237,7 +237,7 @@ A very useful command is \command{emph}{\ldots}, which makes your text stand out
 
 \subsection{Font size}\label{ssecfontsize}
 
-Font size is also controlled with switch commands, cf.\ Table \ref{tblfontsize}. They are used in the same way as the switches mentioned in the previous section. Notice that \LaTeX{} uses relative font sizes by default. This ensures that the ratio between larger and smaller text remains the same if you change the overall fontsize of your document. You can change the overall fontsize by adding \code{10pt}, \code{12pt} etc.\ as an optional argument to \texttt{\textbackslash documentclass}. \LaTeX{} will then also adjust the page margins to match the font size.
+Font size is also controlled with switch commands, cf.\ Table\~\ref{tblfontsize}. They are used in the same way as the switches mentioned in the previous section. Notice that \LaTeX{} uses relative font sizes by default. This ensures that the ratio between larger and smaller text remains the same if you change the overall fontsize of your document. You can change the overall fontsize by adding \code{10pt}, \code{12pt} etc.\ as an optional argument to \texttt{\textbackslash documentclass}. \LaTeX{} will then also adjust the page margins to match the font size.
 
 \begin{table}[ht]
     \centering
@@ -370,7 +370,7 @@ Again, the space produced by the first four spacing commands is relative to your
 
 \subsection{Diacritics and special characters}\label{ssecspecchars}
 
-Diacritics and special characters in \LaTeX{} can be entered with (you guessed it) commands, cf.\ Table \ref{tbldiacr}.
+Diacritics and special characters in \LaTeX{} can be entered with (you guessed it) commands, cf.\ Table\~\ref{tbldiacr}.
 
 \begin{table}[ht]
     \centering
@@ -1046,15 +1046,15 @@ Lastly, AI tools such as ChatGPT or Claude, which have been trained on large cor
 
 By default, \LaTeX{} is quite fussy when it comes to fitting text on a line. Sometimes it does not manage to upholds its standards, and it will tell you so in the log, with a message like \code{Overfull \textbackslash{}hbox (51.48561pt too wide) in paragraph at lines 25--29.}. Since these warnings are such a common source of frustration, they are treated in more detail here.
 
-An \code{Overfull \textbackslash{}hbox error} indicates that \LaTeX{} has had to stretch the space in between words and sentences beyond its preset limits (`underful hbox') or that it could not fit all words on one line, leaving some to stick out into the paper margin (`overfull hbox').\footnote{The term \emph{hbox} stands for `horizontal box' and refers to the line/box \LaTeX{} attempts to fill.}
+An \code{\textbackslash{}hbox error} indicates that \LaTeX{} has had to stretch the space in between words and sentences beyond its preset limits (`underful hbox') or that it could not fit all words on one line, leaving some to stick out into the paper margin (`overfull hbox').\footnote{The term \emph{hbox} stands for `horizontal box' and refers to the line/box \LaTeX{} attempts to fill.}
 
-Not all of these errors are disruptive or `ugly', so don't panic and always check them out before submitting anything important to a journal or your supervisor.
+Not all of these errors are disruptive or `ugly', so in some cases you might decide that they are not a problem. Always check them out before submitting anything important to a journal or your supervisor.
 
 If you are keen on solving these errors, there are a few things you can do. Here they are, in order of increasing desperation.
 
 \begin{enumerate}
     \item Import the \code{babel} package and \code{microtype} packages. Also when you do not have any \code{hbox} errors, these are recommended. \code{Babel} loads hyphenation settings for specific languages, and \code{microtype} stretches the kerning and character widths ever so slightly based on a given font's properties. These are often just enough to fix a nasty \code{hbox} warning.
-    \item If \LaTeX{} still cannot break off a long word, help it along by indicating where the potential breaks are, using \code{\textbackslash -}. For example, we can teach \LaTeX{} how to break the Dutch word \emph{angstschreeuw} by writing it as \code{angst\textbackslash-schreeuw}.\footnote{You can also define hyphenation rules for the entire document, by adding the command \command{hyphenation}{angst\textbackslash-schreeuw} to the preamble.}
+    \item If \LaTeX{} still cannot break off a long word, help it along by indicating where the potential breaks are, using \code{\textbackslash-}. For example, we can teach \LaTeX{} how to break the Dutch word \emph{angstschreeuw} by writing it as \code{angst\textbackslash-schreeuw}.\footnote{You can also define hyphenation rules for the entire document, by adding the command \command{hyphenation}{angst\textbackslash-schreeuw} to the preamble.}
     \item Try to rephrase. By moving words around, \LaTeX{} can often find a better way to fit everything on the line.
     \item Set a higher \code{emergencystretch}. This increases the amount of whitespace \LaTeX{} can add to a line before it is considered `overfull'. For example, \command{setlength}{emergencystretch\{3em\}} will allow \LaTeX{} to add 3em of whitespace to a line before it is considered `overfull'. Use the smallest value that solves your problem, and be sure to wrap this in a \code{begingroup} and \code{endgroup} command, so that the change is only temporary.
     \item Switch to sloppy mode using \switch{sloppy}. This will allow \LaTeX{} to be very loose with its placement and generally leads to ugly spacing, so only use this is you are really desperate!

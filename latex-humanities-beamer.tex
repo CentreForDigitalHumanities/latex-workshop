@@ -9,7 +9,7 @@
 \usepackage{fancyvrb}       % Fancy verbatim environments.
 \newenvironment{CVerbatim} % Verbatim environment with centered text.
 {
-    \VerbatimEnvironment
+    \VerbatimEnvironment%
     \begin{center}
         \begin{BVerbatim}
 } 
@@ -50,7 +50,10 @@
     ItalicFont      =   Minya-Nouvelle-It.otf,
     BoldItalicFont  =   Minya-Nouvelle-Bd-It.otf]{Minya-Nouvelle-Rg.otf}
 
-\usepackage[backend=biber, style=apa]{biblatex}
+\usepackage[
+    backend=biber, 
+    style=apa
+]{biblatex}
 \addbibresource{bib.bib}
 
 \usepackage{hyperref}       % For clickable hyperlinks.
@@ -92,7 +95,7 @@
 \begin{document}
 
 \begin{frame}
-    \titlepage
+    \titlepage%
 \end{frame}
 
 \begin{frame}{Table of Contents}
@@ -371,17 +374,17 @@
             \toprule
             {\rmfamily\bfseries Effect}          & {\rmfamily\bfseries Command} & {\rmfamily\bfseries Switch/Environment} \\
             \midrule
-            \textup{Upright shape}               & \command{textup}{...}        & \switch{upshape}            \\
-            \textit{Italic shape}                & \command{textit}{...}        & \switch{itshape}            \\
-            \textsl{Slanted shape}               & \command{textsl}{...}        & \switch{slshape}            \\
-            {\rmfamily\scshape{}Small caps shape} & \command{textsc}{...}        & \switch{scshape}            \\
+            \textup{Upright shape}               & \command{textup}{\ldots}        & \switch{upshape}            \\
+            \textit{Italic shape}                & \command{textit}{\ldots}        & \switch{itshape}            \\
+            \textsl{Slanted shape}               & \command{textsl}{\ldots}        & \switch{slshape}            \\
+            {\rmfamily\scshape{}Small caps shape} & \command{textsc}{\ldots}        & \switch{scshape}            \\
                                                  &                              &                             \\
-            \textmd{Medium series}               & \command{textmd}{...}        & \switch{mdseries}           \\
-            \textbf{Bold series}                 & \command{textbf}{...}        & \switch{bfseries}           \\
+            \textmd{Medium series}               & \command{textmd}{\ldots}        & \switch{mdseries}           \\
+            \textbf{Bold series}                 & \command{textbf}{\ldots}        & \switch{bfseries}           \\
                                                  &                              &                             \\
-            \textrm{Roman family}                & \command{textrm}{...}        & \switch{rmfamily}           \\
-            \texttt{Typewriter family}           & \command{texttt}{...}        & \switch{ttfamily}           \\
-            \textsf{Sans serif family}           & \command{textsf}{...}        & \switch{sffamily}           \\
+            \textrm{Roman family}                & \command{textrm}{\ldots}        & \switch{rmfamily}           \\
+            \texttt{Typewriter family}           & \command{texttt}{\ldots}        & \switch{ttfamily}           \\
+            \textsf{Sans serif family}           & \command{textsf}{\ldots}        & \switch{sffamily}           \\
             \bottomrule
         \end{tabular}
         \caption{Type styles with a sample text.}\label{tbltypestyle}
@@ -1154,7 +1157,8 @@ Print a table of contents with \switch{tableofcontents}.
         \begin{verbatim}
         \printbibliography
     \end{verbatim}}
-    \printbibliography
+    % [heading=none] avoids having a separate section in Beamer.
+    \printbibliography[heading=none]
 \end{frame}
 
 \begin{frame}{Bibliography -- Exercise}
@@ -1397,11 +1401,13 @@ Print a table of contents with \switch{tableofcontents}.
     \begin{block}{Exercise}
         \begin{itemize}
             \item Ask an LLM to generate a piece of \LaTeX{} code for you, e.g.
-            \item \begin{enumerate}
+            
+            \begin{enumerate}
                 \item Give me a table with alternating row colours: even rows should be light gray, odd rows should be white.
                 \item Add a line plot to a document with the following data: (1,2), (2,3), (3,5), (4,7), (5,11).
                 \item Give musical notation for the opening bar of Beethoven's 5th Symphony.
             \end{enumerate}
+            
             \item Does the generated code work? If it doesn't, can you fix it using additional prompts?
             \item How can LLMs be helpful in your work with \LaTeX{}?
             \item What are the risks of using LLMs in your work with \LaTeX{}?
@@ -1439,8 +1445,6 @@ Print a table of contents with \switch{tableofcontents}.
 \end{frame}
 
 
-
-
 \begin{frame}{Where to go from here}
 
     \LaTeX{} is a skill that needs practice to master.
@@ -1460,12 +1464,16 @@ Print a table of contents with \switch{tableofcontents}.
 
 \begin{frame}{Thank you!}
     Thank you for your attention.
+
     \medskip
+
+    \LaTeX{} source code and slides are available on \href{https://github.com/CentreForDigitalHumanities/latex-workshop}{https://github.com/CentreForDigitalHumanities/latex-workshop}.
+
+    \medskip
+
     \begin{center}
         \textit{Happy \LaTeX{}ing!}
     \end{center}
 \end{frame}
 
 \end{document}
-
-+ 10 fontspec

@@ -1,4 +1,5 @@
 {
+    "latex-workshop.linting.chktex.enabled": true,
     "latex-workshop.latex.tools": [
         {
             "name": "latexmk",
